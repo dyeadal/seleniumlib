@@ -10,8 +10,8 @@ import random # Used to create random sleep/standby
 import undetected_chromedriver as ucd # Undetected chromedriver to avoid bot detection
 
 SeleniumLibVersion = 0.1
-LogEnable=False
-LogLocation=None
+LogEnable = False
+LogLocation = None
 
 # Start the session using undetected chromedriver
 driver = ucd.Chrome()
@@ -77,8 +77,8 @@ def PressEnter(element):
     # Send ENTER key on element
     element.send_keys(Keys.ENTER)
 
-# Press Scroll Down key on an element
-def ScrollDownButton(element):
+# Press Page Down key on an element
+def PressPageDown(element):
     PrintAndLog(f"Scrolling down on {element}")
     element = FindElementByClass(element)
     element.send_keys(Keys.PAGE_DOWN)
@@ -150,6 +150,8 @@ def EnableLogging():
 
 # Create Log File, default to user home directory and name prefix of "SeleniumLib"
 def CreateLogFile(Directory=os.path.expanduser("~"), NamePrefix="SeleniumLib"):
+    # Enable LogLocation to be Global
+    global LogLocation
 
     # Create the filename
     filename = f"{NamePrefix}_{FormattedCurrentTime()}.txt"
@@ -157,36 +159,54 @@ def CreateLogFile(Directory=os.path.expanduser("~"), NamePrefix="SeleniumLib"):
     # Create the path of where it is going to be created
     if LogLocation is None:
         filepath = os.path.join(Directory, filename)
+        LogLocation = filepath
+
     # Custom log filepath
     else:
         filepath = os.path.join(LogLocation, filename)
-
+        LogLocation = filepath
     # Try creating the file
     try:
         with open(filepath, "w") as file:
-            file.write(f"Log created at {FormattedCurrentTime()}"
-                       f"SeleniumLib version: {SeleniumLibVersion}"
-                       f"Created by @dyeadal on GitHub"
-                       f"Not liable for any damages caused by this script, please use responsibly")
-            PrintAndLog(f"Log created at {FormattedCurrentTime()}", filepath)
-            global LogLocation
-            return LogLocation
+            file.write(f"Log created at {FormattedCurrentTime()}\n"
+                       f"SeleniumLib version: {SeleniumLibVersion}\n"
+                       f"Created by @dyeadal on GitHub\n"
+                       f"Not liable for any damages caused by this script, please use responsibly\n")
+            print(f"Log file {filepath} created at {FormattedCurrentTime()}")
+            return filepath
     # If it fails print out message to terminal and ask if they want to quit or continue without logs
     except Exception as error:
         print(f"Failed to create {filename} log file.\nError: {error}")
 
 # Create screenshot
 def Screenshot(NamePrefix="SeleniumLibScreenshot"):
-    name = f"{NamePrefix}_{FormattedCurrentTime()}.png"
-    driver.save_screenshot(name)
-    return name
+
+    try: # taking a screenshot
+        name = f"{NamePrefix}_{FormattedCurrentTime()}.png"
+        driver.save_screenshot(name)
+        return name
+
+    # If error occurs
+    except Exception as error:
+          PrintAndLog(f"Failed to screenshot {name}.\nError: {error}")
+          return None
 
 # Function to print and write to log if variables are configured
 def PrintAndLog(Message):
+    global LogLocation
 
+    # Default is to print out the message regardless if logging was not enabled nor configured
     print(Message)
 
-    if LogEnable is True and LogLocation is not None:
+    # Logging enabled, and custom filepath
+    if LogEnable and LogLocation is not None:
+        # Write to custom filepath
+        WriteToLog(LogLocation, Message)
+
+    # Logging was enabled, but likely no custom filepath
+    elif LogEnable and LogLocation is None:
+        # Create Log File with defaults
+        CreateLogFile()
         WriteToLog(LogLocation, Message)
 
     elif LogEnable is False and LogLocation is not None:
@@ -195,33 +215,38 @@ def PrintAndLog(Message):
               f"Exiting script in 15 seconds...")
         Wait(15)
         exit()
-
     else:
-        print(f"Logging is enabled, but no log file is configured. "
-              f"Please change LogLocation variable from None to a custom location."
-              f"Exiting in 15 seconds...")
-        Wait(15)
-        exit()
-
-# Function to write to log
-def WriteToLog(file, msg):
-
-    if LogEnable is True and LogLocation is not None:
-        try:
-            with open(file, 'a') as file:
-                file.write(CurrentTime() + " --- " + msg + "\n")
-        except Exception as e:
-            print(f"An error occurred writing to file: {e}")
-    elif LogEnable is False and LogLocation is not None:
-        print(f"LogLocation is configured to {LogLocation}, but logs are not enabled."
-              f"Enable Logging by running the function 'EnableLogging()' in your script."
+        print(f"Error: PrintAndLog() function variables causing issue"
               f"Exiting script in 15 seconds...")
         Wait(15)
         exit()
 
+
+# Function to write to log
+def WriteToLog(file, msg):
+    # Logging enabled and custom filepath
+    if LogEnable and LogLocation is not None:
+        try: # write log to file
+            with open(file, 'a') as file:
+                file.write(CurrentTime() + " --- " + msg + "\n")
+        except Exception as error:
+            print(f"An error occurred writing to file: {error}")
+
+    # Logging was enable but no custom filepath
+    elif LogEnable and LogLocation is None:
+        #Create Log File
+        CreateLogFile()
+
+        try: # write log to file
+            with open(file, 'a') as file:
+                file.write(CurrentTime() + " --- " + msg + "\n")
+        except Exception as error:
+            print(f"An error occurred writing to file: {error}")
+
+    # Custom filepath for logging was set, but logging was NOT enabled
     else:
-        print(f"Logging is enabled, but no log file is configured. "
-              f"Please change LogLocation variable from None to a custom location."
-              f"Exiting in 15 seconds...")
+        print(f"LogLocation is configured to {LogLocation}, but logs are not enabled."
+              f"Enable Logging by running the function 'EnableLogging()' in your script."
+              f"Exiting script in 15 seconds...")
         Wait(15)
         exit()
