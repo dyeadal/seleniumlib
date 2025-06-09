@@ -12,14 +12,23 @@ web.RandomWait()
 # Open Web Page
 web.OpenPage("https://google.com")
 
-# Type some text in an element that can take keyboard input
-web.TypeTextInClass("gLFyf","Youtube")
+# Store element as a variable to easily call on
+SearchBar = web.FindElementByClass("gLFyf")
 
-# Press ENTER key in an element
-web.PressEnter("gLFyf")
+# Type some text into searchbar
+web.TypeTextInClass(SearchBar,"Youtube")
+
+# Press ENTER key on the search bar element
+web.PressEnter(SearchBar)
+
+# Store the first result element field as a varaible
+FirstResults = web.FindElementByClass("IsZvec")
+
+# Print out text contained in the first results element
+web.TextInElement(FirstResults)
 
 # Wait for exactly 10 seconds
-web.Wait(10)
+web.Wait(100)
 
 # Close the Web Browser
 web.CloseBrowser()
