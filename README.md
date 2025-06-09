@@ -3,9 +3,9 @@ Personal library to quickly script undetected web automation for everyday use.
 
 ---
 
-### Installation
+## Installation
 
-##### Windows 
+### Windows 
 
 Install selenium:
 
@@ -16,7 +16,7 @@ Install undetectable chromedriver by :
 `pip install undetected-chromedriver`
 
 
-##### Linux/MacOS
+### Linux/MacOS
 Install selenium:
 
 `pip3 install selenium`
