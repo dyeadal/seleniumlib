@@ -1,5 +1,5 @@
 # seleniumlib
-Personal library to quickly script undetected web automation for everyday use.
+Personal library to quickly script undetected web automation task for everyday use.
 
 ---
 
