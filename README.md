@@ -2,7 +2,7 @@
 A lightweight, human-like web automation helper built with undetected ChromeDriver and Python
 
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 
 - [Features](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
 - [Installation](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
