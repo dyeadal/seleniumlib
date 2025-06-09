@@ -10,6 +10,7 @@ A lightweight, human-like web automation helper built with undetected ChromeDriv
   - [Linux/MacOS](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)  
 - [Example Usage](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
 - [Features in Development](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
+- [Acknowledgements]()
 
 ---
 
@@ -75,3 +76,18 @@ web.CloseBrowser()                                          # Exit browser
 ## Features in Development
 - Ollama Thinking Models to generate text
 - Ollama to store documents to guess prompted user responses
+
+---
+
+## Acknowledgements
+This project uses the following open-source libraries:
+
+[Selenium](https://github.com/SeleniumHQ) Licensed under the Apache License 2.0.
+
+A browser automation framework and ecosystem. 
+
+[undetected-chromedriver(UCD)](https://github.com/ultrafunkamsterdam/undetected-chromedriver) Licensed under the GPL-3.0 license.
+    
+Custom Selenium Chromedriver | Zero-Config | Passes ALL bot mitigation systems (like Distil / Imperva/ Datadadome / CloudFlare IUAM)
+
+Many thanks to the maintainers of these projects for making powerful tools freely available to the community.
