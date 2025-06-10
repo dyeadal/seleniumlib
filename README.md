@@ -4,13 +4,14 @@ A lightweight, human-like web automation helper built with undetected ChromeDriv
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)
 
-- [Features](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
-- [Installation](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
-  - [Windows](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
-  - [Linux/MacOS](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)  
-- [Example Usage](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
-- [Features in Development](https://github.com/dyeadal/seleniumlib/edit/main/README.md#%EF%B8%8F-features)
-- [Acknowledgements]()
+- [Features](https://github.com/dyeadal/seleniumlib/main/README.md#%EF%B8%8F-features)
+- [Installation](https://github.com/dyeadal/seleniumlib/main/README.md#%EF%B8%8F-features)
+  - [Windows](https://github.com/dyeadal/seleniumlib/main/README.md#%EF%B8%8F-features)
+  - [Linux/MacOS](https://github.com/dyeadal/seleniumlib/main/README.md#%EF%B8%8F-features)  
+- [Example Usage](https://github.com/dyeadal/seleniumlib/main/README.md#%EF%B8%8F-features)
+- [Features in Development](https://github.com/dyeadal/seleniumlib/main/README.md#%EF%B8%8F-features)
+- [Acknowledgements](https://github.com/dyeadal/seleniumlib/main/README.md#acknowledgements)
+- [Disclaimer and Responsible Use](https://github.com/dyeadal/seleniumlib/main/README.md#%EF%B8%8F-disclaimer-and-responsible-use-%EF%B8%8F)
 
 ---
 
@@ -86,8 +87,23 @@ This project uses the following open-source libraries:
 
 A browser automation framework and ecosystem. 
 
+
 [undetected-chromedriver(UCD)](https://github.com/ultrafunkamsterdam/undetected-chromedriver) Licensed under the GPL-3.0 license.
     
 Custom Selenium Chromedriver | Zero-Config | Passes ALL bot mitigation systems (like Distil / Imperva/ Datadadome / CloudFlare IUAM)
 
 Many thanks to the maintainers of these projects for making powerful tools freely available to the community.
+
+---
+
+## ⚠️ Disclaimer and Responsible Use ⚠️
+
+This project is intended for educational and authorized automation only.
+
+Do NOT use this tool to interact with websites without permission or in violation of their Terms of Service.
+
+This script includes functionality that can mimic human interaction, which may bypass basic bot detection — use responsibly.
+
+The author is not liable for any misuse or legal consequences resulting from unauthorized use.
+
+Only test against systems you own or have explicit permission to automate.
