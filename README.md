@@ -83,14 +83,18 @@ web.CloseBrowser()                                          # Exit browser
 ## Acknowledgements
 This project uses the following open-source libraries:
 
-[Selenium](https://github.com/SeleniumHQ) Licensed under the Apache License 2.0.
+- ### [Selenium](https://github.com/SeleniumHQ)
 
-A browser automation framework and ecosystem. 
+  Licensed under the Apache License 2.0.
+  
+  A browser automation framework and ecosystem. 
 
+- ### [undetected-chromedriver(UCD)](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
 
-[undetected-chromedriver(UCD)](https://github.com/ultrafunkamsterdam/undetected-chromedriver) Licensed under the GPL-3.0 license.
-    
-Custom Selenium Chromedriver | Zero-Config | Passes ALL bot mitigation systems (like Distil / Imperva/ Datadadome / CloudFlare IUAM)
+  Licensed under the GPL-3.0 license.
+  
+  Custom Selenium Chromedriver | Zero-Config | Passes ALL bot mitigation systems (like Distil / Imperva/ Datadadome / CloudFlare IUAM)
+
 
 Many thanks to the maintainers of these projects for making powerful tools freely available to the community.
 
