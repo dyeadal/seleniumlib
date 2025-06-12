@@ -36,7 +36,7 @@ def OpenPage(url):
         # Wait until condition is met, timeouts after so many seconds set by TimeoutSecToLoad variable
         WebDriverWait(driver, TimeoutSecToLoad).until(
             # Condition = Until it can see the <body> tag to see page contents
-            expected_conditions.presence_of_element_located(By.TAG_NAME, "body")
+            expected_conditions.presence_of_element_located((By.TAG_NAME, "body")) # takes only one argument, double enclosed ()s
         )
         PrintAndLog(f"URL successfully loaded, can see <body> tag.")
         # Wait for a moment before continuing
@@ -78,7 +78,7 @@ def RandomWait(min=3, max=10):
         ErrorHandler(f"Failed to wait for {num} seconds.\n Error: {error}")
 
 # Wait for random time. default between 0.1 and 2.0 seconds
-def EmulateHumanHesitation(min=0.1, max=2.0):
+def EmulateHumanHesitation(min=3.0, max=7.0):
     PrintAndLog(f"Emulating human hesitation via EmulateHumanHesitation() function with values {min}, {max}.")
     try:
         time.sleep(random.uniform(min, max))
@@ -206,7 +206,7 @@ def FindElement(by, value):
         return element
     except Exception as error:
         ErrorHandler(f"Failed finding element by {by} {value}\n Error: {error}")
-        
+
 # Return text contained in an element
 def ElementText(element):
     PrintAndLog(f"Returning text in element: {element.text}")
@@ -224,23 +224,23 @@ def IfTextInElement(string, element, casesensitive=True):
         if casesensitive == True:
             # If found return true and log
             if string in element.text:
-                PrintAndLog(f"The case sensitive string {string} was found in element: {element}.\n Returning True")
+                PrintAndLog(f"The case sensitive string {string} was found in element: {element}.\n Returning True\nElement contains {element.text}")
                 return True
             # If NOT found return false and log
             else:
-                PrintAndLog(f"The case sensitive string {string} was NOT found in element: {element}.\n Returning False")
+                ThrowIntentionalError(f"The case sensitive string {string} was NOT found in element: {element}.\n Returning False\nElement contains {element.text}")
                 return False
-
         # Case sensitivity disabled, runs this statement instead
         else:
             # If values using the lower() functions equals each other retunr true
             if str(string.lower()) in element.text.lower():
-                PrintAndLog(f"The non-case sensitive string {string} was found in element: {element}.\n Returning True")
+                PrintAndLog(f"The non-case sensitive string {string} was found in element: {element}.\n Returning True\nElement contains {element.text}")
                 return True
             # If NOT found using lower()'ed strings return false and log
             else:
-                PrintAndLog(f"The non-case sensitive string {string} was NOT found in element: {element}.\n Returning False")
+                ThrowIntentionalError(f"The non-case sensitive string {string} was NOT found in element: {element}.\n Returning False\nElement contains {element.text}")
                 return False
+
     except Exception as error:
         PrintAndLog(f"Failed to find string {string} in element {element}. Casesensitive: {casesensitive}.\n Error: {error}")
 ##########################################################################
@@ -343,10 +343,6 @@ def PrintAndLog(Message):
     else:
         return None
 
-    # Logging is disabled AND no custom path for logging set
-
-
-
 # Function to write to log
 def WriteToLog(file, msg):
     # Logging enabled and custom filepath
@@ -389,7 +385,24 @@ def ErrorHandler(msg):
     if answer == "y" or answer == "Y":
         PrintAndLog(f"User decided to continue after facing Error: {msg}.")
         return None
-    # If no, logs terminiation due to error and quits
+    # If no, logs termination due to error and quits
     else:
         PrintAndLog(f"User decided to terminate script after facing Error: {msg}.")
+        CloseBrowser()
+
+def ThrowIntentionalError(msg):
+    PrintAndLog(f" Throwing Intentional Error: \n{msg}\n")
+
+    raise Exception(f"{msg}\n")
+
+    # Ask the user if they want to continue
+    answer = input("Do you want to continue? [y/n]")
+
+    # If yes, logs the error and the user wants to continue, returns None
+    if answer == "y" or answer == "Y":
+        PrintAndLog(f"\nUser decided to continue after facing Error: {msg}.\n")
+        return None
+    # If no, logs termination due to error and quits
+    else:
+        PrintAndLog(f"\nUser decided to terminate script after facing Error: {msg}.\n")
         CloseBrowser()
