@@ -1,17 +1,21 @@
 # Created by dyeadal
 # GNU General Public License 3.0
+SeleniumLibVersion = 0.1
 
 from selenium.webdriver.common.by import By # Allows searching for HTML tags
 from selenium.webdriver.common.keys import Keys # Allows keyboard emulation
+from selenium.webdriver.support.wait import WebDriverWait # used to wait on loading pages
+from selenium.webdriver.support import expected_conditions # used to find and confirm page content loaded
+
 import time # Used to sleep/standby
 import datetime # Used to create logs and screenshots
 import os # Used for log creation
 import random # Used to create random sleep/standby
 import undetected_chromedriver as ucd # Undetected chromedriver to avoid bot detection
 
-SeleniumLibVersion = 0.1
-LogEnable = False
-LogLocation = None
+LogEnable = False # enable or disable logging to a text file
+LogLocation = None # set custom log location
+TimeoutSecToLoad = 30 # set seconds before timeout
 
 # Start the session using undetected chromedriver
 driver = ucd.Chrome()
@@ -22,50 +26,85 @@ driver = ucd.Chrome()
 
 # Open URL
 def OpenPage(url):
-    PrintAndLog(f"Opening {url}")
+    # Print and Log function use
+    PrintAndLog(f"Opening {url} via OpenPage() function.")
+    # Perform HTTP GET of URL
     driver.get(url)
+
+    # Wait to see page load
+    try:
+        # Wait until condition is met, timeouts after so many seconds set by TimeoutSecToLoad variable
+        WebDriverWait(driver, TimeoutSecToLoad).until(
+            # Condition = Until it can see the <body> tag to see page contents
+            expected_conditions.presence_of_element_located(By.TAG_NAME, "body")
+        )
+        PrintAndLog(f"URL successfully loaded, can see <body> tag.")
+        # Wait for a moment before continuing
+        EmulateHumanHesitation()
+
+    # Fails to load in given time
+    except Exception as error:
+        ErrorHandler(f"URL failed to load in time, can't see <body> tag.\n Error: {error}")
 
 # Close browser
 def CloseBrowser():
-    PrintAndLog("Closing browser.")
-    driver.quit()
+    PrintAndLog(f"Closing browser via CloseBrowser() function.")
+    try:
+        driver.quit()
+        PrintAndLog("Closed browser.")
+    except Exception as error:
+        ErrorHandler(f"Failed to close browser.\nError: {error}")
 
 ##########################################################################
 ### Human Emulation
 ##########################################################################
 
-# Wait for X seconds, 2 by default
-def Wait(seconds=2):
-    PrintAndLog(f"Waiting for {seconds} seconds...")
-    time.sleep(seconds)
+# Wait for X seconds, 3 by default
+def Wait(seconds=3):
+    PrintAndLog(f"Waiting for {seconds} seconds via Wait() function.")
+    try:
+        time.sleep(seconds)
+    except Exception as error:
+        ErrorHandler(f"Failed to wait for {seconds} seconds.\nError: {error}")
 
-# Wait for 1 to 10 seconds randomly by default, can be changed
-def RandomWait(min=1, max=10):
-    num = random.randint(min, max)
-    PrintAndLog(f"Waiting randomly for {num} seconds...")
-    time.sleep(num)
+# Wait for 3 to 10 seconds randomly by default, can be changed
+def RandomWait(min=3, max=10):
+    PrintAndLog(f"Attempting to randomly wait via RandomWait({min}, {max}) function.")
+    try:
+        num = random.randint(min, max)
+        PrintAndLog(f"Waiting randomly for {num} seconds via RandomWait() function.")
+        time.sleep(num)
+    except Exception as error:
+        ErrorHandler(f"Failed to wait for {num} seconds.\n Error: {error}")
 
 # Wait for random time. default between 0.1 and 2.0 seconds
 def EmulateHumanHesitation(min=0.1, max=2.0):
-    time.sleep(random.uniform(min, max))
+    PrintAndLog(f"Emulating human hesitation via EmulateHumanHesitation() function with values {min}, {max}.")
+    try:
+        time.sleep(random.uniform(min, max))
+    except Exception as error:
+        ErrorHandler(f"Emulating human hesitation failed.\n Error: {error}")
 
 # Insert text as if it were being typed out by a human
-def TypeTextInClass(element, text):
-
+def TypeTextInElement(element, text):
+    PrintAndLog(f"Emulating {text} via TypeTextInClass() function in element {element}.")
     # Store list of keys and time took to "type" each key
     seclist = "Pressed keys:"
 
     # Loop through each character in the string
-    for item in text:
-        # Send single character to element
-        element.send_keys(item)
-        # Create random float variable num
-        num = random.random()
-        # Add imitated key pressed and the seconds it took to list
-        seclist = seclist + (f"{item} : {num}, ")
-        # Wait for random number of milliseconds
-        time.sleep(num)
-    PrintAndLog(f"Imitated a human typing on a keyboard:\n{seclist}\n")
+    try:
+        for item in text:
+            # Send single character to element
+            element.send_keys(item)
+            # Create random float variable num
+            num = random.random()
+            # Add imitated key pressed and the seconds it took to list
+            seclist = seclist + (f"{item} : {num}, ")
+            # Wait for random number of milliseconds
+            time.sleep(num)
+        PrintAndLog(f"Successfully imitated a human typing on a keyboard:\n{seclist}\n")
+    except Exception as error:
+        ErrorHandler(f"Failed imitating typing {text} into element {element}.\n Error: {error}")
 
 ##########################################################################
 ### Keyboard Emulation
@@ -73,20 +112,42 @@ def TypeTextInClass(element, text):
 
 # Press Enter key on an element
 def PressEnter(element):
-    PrintAndLog(f"Pressing Enter Key in {element}")
-    # Send ENTER key on element
-    element.send_keys(Keys.ENTER)
+    PrintAndLog(f"Pressing the enter key on element {element}.")
+    try:
+        # Send ENTER key on element
+        element.send_keys(Keys.ENTER)
+        PrintAndLog(f"Pressed Enter Key in {element}")
+    except Exception as error:
+        ErrorHandler(f"Failed pressing enter key in {element}.\n Error: {error}")
 
 # Press Page Down key on an element
 def PressPageDown(element):
-    PrintAndLog(f"Scrolling down on {element}")
-    element = FindElementByClass(element)
-    element.send_keys(Keys.PAGE_DOWN)
+    PrintAndLog(f"Pressing the page down key on element {element}.")
+    try:
+        element = FindElementByClass(element)
+        element.send_keys(Keys.PAGE_DOWN)
+        PrintAndLog(f"Scrolled down on {element}")
+    except Exception as error:
+        ErrorHandler(f"Failed scrolling down on {element}.\n Error: {error}")
+
+# Press Page Up key on an element
+def PressPageUp(element):
+    PrintAndLog(f"Pressing the page up key on element {element}.")
+    try:
+        element = FindElementByClass(element)
+        element.send_keys(Keys.PAGE_UP)
+        PrintAndLog(f"Scrolled up on {element}")
+    except Exception as error:
+        ErrorHandler(f"Failed scrolling up on {element}.\n Error: {error}")
 
 # Insert text directly and fast
 def InsertText(element, text):
-    PrintAndLog(f"Inserting {text} into {element}")
-    element.send_keys(text)
+    PrintAndLog(f"Inserting {text} on element {element}.")
+    try:
+        element.send_keys(text)
+        PrintAndLog(f"Inserted {text} into {element}")
+    except Exception as error:
+        ErrorHandler(f"Failed inserting {text} into {element}.\n Error: {error}")
 
 ##########################################################################
 ### Mouse Emulation
@@ -94,15 +155,22 @@ def InsertText(element, text):
 
 # Emulate scrolling to an element to be viewable on screen
 def ScrollToElement(element):
-    PrintAndLog(f"Scrolling to element")
-    driver.execute_script(
-        "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+    PrintAndLog(f"Scrolling to element {element}.")
+    try:
+        driver.execute_script(
+            "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+        PrintAndLog(f"Scrolled to element")
+    except Exception as error:
+        ErrorHandler(f"Failed scrolling to element {element}.\n Error: {error}")
 
 # Click on an element based on Class
 def ClickOnElement(element):
-    print(f"Clicking element {element.text}")
-    element.click()
-
+    PrintAndLog(f"Clicking on element {element}.")
+    try:
+        element.click()
+        print(f"Clicked on element {element.text}")
+    except Exception as error:
+        ErrorHandler(f"Failed clicking on element {element}.\n Error: {error}")
 
 ##########################################################################
 ### Page Scraping
@@ -111,37 +179,91 @@ def ClickOnElement(element):
 # Find element on webpage by its class name
 def FindElementByClass(classname):
     PrintAndLog(f"Finding element by class {classname}")
-    element = driver.find_element(By.CLASS_NAME, classname)
-    return element
+    try:
+        element = driver.find_element(By.CLASS_NAME, classname)
+        PrintAndLog(f"Found element by class {classname}")
+        return element
+    except Exception as error:
+        ErrorHandler(f"Failed finding element by class {classname}.\n Error: {error}")
+
 
 # Find element on webpage by its ID name
 def FindElementByID(idname):
     PrintAndLog(f"Finding element by ID name {idname}")
-    element = driver.find_element(By.ID, idname)
-    return element
+    try:
+        element = driver.find_element(By.ID, idname)
+        PrintAndLog(f"Found element by ID name {idname}")
+        return element
+    except Exception as error:
+        ErrorHandler(f"Failed finding element by ID name {idname}\n Error: {error}")
 
-# Find element using any By value for advance users (By.XPATH, By.CSS_SELECTOR, etc.)
+# Find element using any By value for advanced users (By.XPATH, By.CSS_SELECTOR, etc.)
 def FindElement(by, value):
     PrintAndLog(f"Finding element by {by} {value}")
-    element = driver.find_element(by, value)
-    return element
-
+    try:
+        element = driver.find_element(by, value)
+        PrintAndLog(f"Found element by {by} {value}")
+        return element
+    except Exception as error:
+        ErrorHandler(f"Failed finding element by {by} {value}\n Error: {error}")
+        
 # Return text contained in an element
-def TextInElement(element):
-    PrintAndLog(f"Returning text in element: {element}")
-    return element.text
+def ElementText(element):
+    PrintAndLog(f"Returning text in element: {element.text}")
+    try:
+        PrintAndLog(f"Returning text in element: {element.text}")
+        return element.text
+    except Exception as error:
+        ErrorHandler(f"Failed returning text in element {element}.\n Error: {error}")
 
+# Compare a string to the text contained in an element
+def IfTextInElement(string, element, casesensitive=True):
+    PrintAndLog(f"Attempting to find string {string} in element {element}. Casesensitive: {casesensitive}.")
+    # Case sensitivity enabled, runs this statement
+    try:
+        if casesensitive == True:
+            # If found return true and log
+            if string in element.text:
+                PrintAndLog(f"The case sensitive string {string} was found in element: {element}.\n Returning True")
+                return True
+            # If NOT found return false and log
+            else:
+                PrintAndLog(f"The case sensitive string {string} was NOT found in element: {element}.\n Returning False")
+                return False
+
+        # Case sensitivity disabled, runs this statement instead
+        else:
+            # If values using the lower() functions equals each other retunr true
+            if str(string.lower()) in element.text.lower():
+                PrintAndLog(f"The non-case sensitive string {string} was found in element: {element}.\n Returning True")
+                return True
+            # If NOT found using lower()'ed strings return false and log
+            else:
+                PrintAndLog(f"The non-case sensitive string {string} was NOT found in element: {element}.\n Returning False")
+                return False
+    except Exception as error:
+        PrintAndLog(f"Failed to find string {string} in element {element}. Casesensitive: {casesensitive}.\n Error: {error}")
 ##########################################################################
 ### Debug and Logging
 ##########################################################################
 
 def CurrentTime():
-    raw_time = str(datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"))
-    return raw_time
+    PrintAndLog(f"Attempting to capture current time via CurrentTime() function.")
+    try:
+        raw_time = str(datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S"))
+        PrintAndLog(f"Current time: {raw_time}")
+        return raw_time
+    except Exception as error:
+        ErrorHandler(f"Failed to capture current time via CurrentTime() function\n Error: {error}")
 
 def FormattedCurrentTime():
-    formatted_time = str(datetime.datetime.now().strftime("%m%d%Y_%H%M%S"))
-    return formatted_time
+    PrintAndLog(f"Attempting to format current time via FormattedCurrentTime() function.")
+    try:
+        formatted_time = str(datetime.datetime.now().strftime("%m%d%Y_%H%M%S"))
+        PrintAndLog(f"Successfully formatted current time: {formatted_time}")
+        return formatted_time
+    except Exception as error:
+        PrintAndLog(f"Failed to format current time via FormattedCurrentTime() function.\n Error: {error}")
 
 # Enable logging, changing global variable. Functions will log actions
 def EnableLogging():
@@ -209,17 +331,20 @@ def PrintAndLog(Message):
         CreateLogFile()
         WriteToLog(LogLocation, Message)
 
+    # Logging is disabled and, and LogLocation is custom
     elif LogEnable is False and LogLocation is not None:
-        print(f"LogLocation is configured to {LogLocation}, but logs are not enabled."
-              f"Enable Logging by running the function 'EnableLogging()' in your script."
+        print(f"LogLocation is configured to {LogLocation}, but logs are not enabled.\n"
+              f"Enable Logging by running the function 'EnableLogging()' in your script.\n"
               f"Exiting script in 15 seconds...")
-        Wait(15)
+        time.sleep(15) # Can not use Wait() it will invoke PrintAndLog() again and loop
         exit()
+
+    # Logging not enabled and no custom path set, default test behaviour
     else:
-        print(f"Error: PrintAndLog() function variables causing issue"
-              f"Exiting script in 15 seconds...")
-        Wait(15)
-        exit()
+        return None
+
+    # Logging is disabled AND no custom path for logging set
+
 
 
 # Function to write to log
@@ -250,3 +375,21 @@ def WriteToLog(file, msg):
               f"Exiting script in 15 seconds...")
         Wait(15)
         exit()
+
+# Handles errors that occur on website
+def ErrorHandler(msg):
+
+    # Print and log error
+    PrintAndLog(f"\nError: \n{msg}\n")
+
+    # Ask the user if they want to continue
+    answer = input("Do you want to continue? [y/n]")
+
+    # If yes, logs the error and the user wants to continue, returns None
+    if answer == "y" or answer == "Y":
+        PrintAndLog(f"User decided to continue after facing Error: {msg}.")
+        return None
+    # If no, logs terminiation due to error and quits
+    else:
+        PrintAndLog(f"User decided to terminate script after facing Error: {msg}.")
+        CloseBrowser()
